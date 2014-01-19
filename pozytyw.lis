@@ -1,12 +1,13 @@
 
-AVRASM ver. 1.74  speaker2.asm Tue Dec 17 18:23:01 2013
+AVRASM ver. 1.74  pozytyw.asm Sun Jan 19 23:11:44 2014
 
 
          ; ******************************************************
          ; BASIC .ASM template file for AVR
          ; ******************************************************
          
-          .include "C:\PROGRA~2\VMLAB\include\m16def.inc"
+         ;.include "C:\Program~2\VMLAB\include\m16def.inc"
+          .include "C:\PROGRA~3\Mikro\VMLAB\include\m16def.inc"
          ;***************************************************************************
          ;* A P P L I C A T I O N   N O T E   F O R   T H E   A V R   F A M I L Y
          ;* 
@@ -516,6 +517,21 @@ AVRASM ver. 1.74  speaker2.asm Tue Dec 17 18:23:01 2013
           .equ	OC0addr =$026   ;Output Compare0 Interrupt Vector Address
           .equ	SPMRaddr=$028   ;Store Program Memory Ready Interrupt Vector Address
          
+         ; Wizja:
+         ; Ka¿dy utwór jest whardcodowany jako funkcja
+         ; Jest jakies GUI na LCD, które wyswietla nr utworu i jego nazwe
+         ; SW7 - poprzedni utwór
+         ; SW6 - nastêpny utwór
+         ; SW5 - graj/przestañ
+         
+         ; Najprostrze rozwi¹zanie - dowolny przycisk wywo³uje przerwanie, ktore przerywa utwor i obsluguje przycisk
+         ; Drugie rozwiazanie - Gdy grany jest utwor wylaczane jest przerwanie SW7 i SW6
+         ; Trzecie rozwiazanie - obslugiwanie przerwania SW7 i SW6 nie przerywa utworu, a wykonuje sie w czasie przerwy pomiedzy nutami
+         
+         ; LCD:
+         ; Pierwsze rozwiazanie - dwa wiersze ekranu sa zarezerwowane dla jedengo utworu
+         ; Drugie rozwiazanie - Wyswietlamy aktywny utwor w pierwszej lini, a w drugiej nastepny
+         
          ; Define here the variables
          ;
           .def  temp  =r16
@@ -615,248 +631,266 @@ AVRASM ver. 1.74  speaker2.asm Tue Dec 17 18:23:01 2013
 00001c e002      	ldi r16, 1 << OCIE0
 00001d bf09      	out TIMSK, r16
          	
-         	; Cicha noc
-00001e e40f      	ldi r16, SOUND_g1
-00001f e01c      	ldi r17, EIGHTH_NOTE + SIXTH_NOTE
-000020 d08e      	rcall play_sound		
-000021 e407      	ldi r16, SOUND_a1
-000022 e014      	ldi r17, SIXTH_NOTE
-000023 d08b      	rcall play_sound	
-000024 e40f      	ldi r16, SOUND_g1
-000025 e018      	ldi r17, EIGHTH_NOTE
-000026 d088      	rcall play_sound	
-000027 e50e      	ldi r16, SOUND_e1
-000028 e118      	ldi r17, QUARTER_NOTE + EIGHTH_NOTE
-000029 d085      	rcall play_sound
-         	
-00002a e40f      	ldi r16, SOUND_g1
-00002b e01c      	ldi r17, EIGHTH_NOTE + SIXTH_NOTE
-00002c d082      	rcall play_sound		
-00002d e407      	ldi r16, SOUND_a1
-00002e e014      	ldi r17, SIXTH_NOTE
-00002f d07f      	rcall play_sound	
-000030 e40f      	ldi r16, SOUND_g1
-000031 e018      	ldi r17, EIGHTH_NOTE
-000032 d07c      	rcall play_sound	
-000033 e50e      	ldi r16, SOUND_e1
-000034 e118      	ldi r17, QUARTER_NOTE + EIGHTH_NOTE
-000035 d079      	rcall play_sound
-         
-000036 e305      	ldi r16, SOUND_d2
-000037 e110      	ldi r17, QUARTER_NOTE
-000038 d076      	rcall play_sound
-000039 e305      	ldi r16, SOUND_d2
-00003a e018      	ldi r17, EIGHTH_NOTE
-00003b d073      	rcall play_sound
-00003c e30f      	ldi r16, SOUND_h1
-00003d e110      	ldi r17, QUARTER_NOTE
-00003e d070      	rcall play_sound							
-00003f e30f      	ldi r16, SOUND_h1
-000040 e018      	ldi r17, EIGHTH_NOTE
-000041 d06d      	rcall play_sound
-         	
-000042 e30b      	ldi r16, SOUND_c2
-000043 e110      	ldi r17, QUARTER_NOTE
-000044 d06a      	rcall play_sound				
-000045 e30b      	ldi r16, SOUND_c2
-000046 e018      	ldi r17, EIGHTH_NOTE
-000047 d067      	rcall play_sound
-000048 e40f      	ldi r16, SOUND_g1
-000049 e118      	ldi r17, QUARTER_NOTE + EIGHTH_NOTE
-00004a d064      	rcall play_sound		
-         	
-00004b e022      	ldi r18, 2
-          	loop_26576:
-00004c e407      		ldi r16, SOUND_a1
-00004d e110      		ldi r17, QUARTER_NOTE
-00004e d060      		rcall play_sound
-00004f e407      		ldi r16, SOUND_a1
-000050 e018      		ldi r17, EIGHTH_NOTE
-000051 d05d      		rcall play_sound
-000052 e30b      		ldi r16, SOUND_c2
-000053 e01c      		ldi r17, EIGHTH_NOTE + SIXTH_NOTE
-000054 d05a      		rcall play_sound
-000055 e30f      		ldi r16, SOUND_h1
-000056 e014      		ldi r17, SIXTH_NOTE
-000057 d057      		rcall play_sound
-000058 e407      		ldi r16, SOUND_a1
-000059 e018      		ldi r17, EIGHTH_NOTE
-00005a d054      		rcall play_sound
-         		
-00005b e40f      		ldi r16, SOUND_g1
-00005c e01c      		ldi r17, EIGHTH_NOTE + SIXTH_NOTE
-00005d d051      		rcall play_sound				
-00005e e407      		ldi r16, SOUND_a1
-00005f e014      		ldi r17, SIXTH_NOTE
-000060 d04e      		rcall play_sound
-000061 e40f      		ldi r16, SOUND_g1
-000062 e018      		ldi r17, EIGHTH_NOTE
-000063 d04b      		rcall play_sound
-000064 e50e      		ldi r16, SOUND_e1
-000065 e110      		ldi r17, QUARTER_NOTE
-000066 d048      		rcall play_sound
-000067 e40f      		ldi r16, SOUND_g1
-000068 e018      		ldi r17, EIGHTH_NOTE
-000069 d045      		rcall play_sound
-         		
-00006a 952a      		dec r18
-00006b f701      		brne loop_26576
-00006c 0000      	nop
-         	
-00006d e305      	ldi r16, SOUND_d2
-00006e e110      	ldi r17, QUARTER_NOTE
-00006f d03f      	rcall play_sound
-000070 e305      	ldi r16, SOUND_d2
-000071 e018      	ldi r17, EIGHTH_NOTE
-000072 d03c      	rcall play_sound
-000073 e20c      	ldi r16, SOUND_f2
-000074 e01c      	ldi r17, EIGHTH_NOTE + SIXTH_NOTE
-000075 d039      	rcall play_sound
-000076 e305      	ldi r16, SOUND_d2
-000077 e014      	ldi r17, SIXTH_NOTE
-000078 d036      	rcall play_sound
-000079 e30f      	ldi r16, SOUND_h1
-00007a e018      	ldi r17, EIGHTH_NOTE
-00007b d033      	rcall play_sound
-         	
-00007c e30b      	ldi r16, SOUND_c2
-00007d e118      	ldi r17, EIGHTH_NOTE + QUARTER_NOTE
-00007e d030      	rcall play_sound
-00007f e30b      	ldi r16, SOUND_c2
-000080 e018      	ldi r17, EIGHTH_NOTE
-000081 d02d      	rcall play_sound
-000082 e100      	ldi r16, QUARTER_NOTE
-000083 d054      	rcall longlongdelay
-         	
-000084 e30b      	ldi r16, SOUND_c2
-000085 e01c      	ldi r17, EIGHTH_NOTE + SIXTH_NOTE
-000086 d028      	rcall play_sound
-000087 e40f      	ldi r16, SOUND_g1
-000088 e014      	ldi r17, SIXTH_NOTE
-000089 d025      	rcall play_sound
-00008a e50e      	ldi r16, SOUND_e1
-00008b e018      	ldi r17, EIGHTH_NOTE
-00008c d022      	rcall play_sound
-00008d e40f      	ldi r16, SOUND_g1
-00008e e01c      	ldi r17, EIGHTH_NOTE + SIXTH_NOTE
-00008f d01f      	rcall play_sound
-000090 e509      	ldi r16, SOUND_f1
-000091 e014      	ldi r17, SIXTH_NOTE
-000092 d01c      	rcall play_sound
-000093 e60a      	ldi r16, SOUND_d1
-000094 e018      	ldi r17, EIGHTH_NOTE
-000095 d019      	rcall play_sound
-         	
-000096 e707      	ldi r16, SOUND_c1
-000097 e118      	ldi r17, EIGHTH_NOTE + QUARTER_NOTE
-000098 d016      	rcall play_sound
-000099 e707      	ldi r16, SOUND_c1
-00009a e018      	ldi r17, EIGHTH_NOTE
-00009b d013      	rcall play_sound
-00009c e100      	ldi r16, QUARTER_NOTE
-00009d d03a      	rcall longlongdelay
+00001e d047      	rcall cichanoc
          
           forever:
-00009e 0000         nop
-00009f 0000         nop       ; Infinite loop.
-0000a0 0000         nop       ; Define your main system
-0000a1 0000         nop       ; behaviour here
-0000a2 cffb      rjmp forever
+00001f 0000         nop
+000020 0000         nop       ; Infinite loop.
+000021 0000         nop       ; Define your main system
+000022 0000         nop       ; behaviour here
+000023 cffb      rjmp forever
          
           trigger_speaker:
-0000a3 930f      	push r16
-0000a4 b70f      	in r16, SREG
-0000a5 930f      	push r16
+000024 930f      	push r16
+000025 b70f      	in r16, SREG
+000026 930f      	push r16
          	
-0000a6 b306      	in r16, PINB
-0000a7 fd03      	sbrc r16, PB3
-0000a8 98c3      	cbi SPEAKER_PORT, SPEAKER_P
-0000a9 ff03      	sbrs r16, PB3
-0000aa 9ac3      	sbi SPEAKER_PORT, SPEAKER_P
+000027 b306      	in r16, PINB
+000028 fd03      	sbrc r16, PB3
+000029 98c3      	cbi SPEAKER_PORT, SPEAKER_P
+00002a ff03      	sbrs r16, PB3
+00002b 9ac3      	sbi SPEAKER_PORT, SPEAKER_P
          	
-0000ab 910f      	pop r16
-0000ac bf0f      	out SREG, r16
-0000ad 910f      	pop r16
-0000ae 9518      reti
+00002c 910f      	pop r16
+00002d bf0f      	out SREG, r16
+00002e 910f      	pop r16
+00002f 9518      reti
          
          ; r16 - czêstotliwoœæ	r17 - d³ugoœæ nutki
           play_sound:
-0000af 932f      	push r18
-0000b0 b72f      	in r18, SREG
-0000b1 932f      	push r18
+000030 932f      	push r18
+000031 b72f      	in r18, SREG
+000032 932f      	push r18
          	
-0000b2 bf0c      	out OCR0, r16
-0000b3 e12c      	ldi r18, 1 << WGM01 | 1 << CS02 | 1 << COM00
-0000b4 bf23      	out TCCR0, r18
+000033 bf0c      	out OCR0, r16
+000034 e12c      	ldi r18, 1 << WGM01 | 1 << CS02 | 1 << COM00
+000035 bf23      	out TCCR0, r18
          	
-0000b5 2f01      	mov r16, r17
-0000b6 d021      	rcall longlongdelay
+000036 2f01      	mov r16, r17
+000037 d021      	rcall longlongdelay
          	
-0000b7 e128      	ldi r18, 1 << WGM01 | 1 << COM00
-0000b8 bf23      	out TCCR0, r18
-0000b9 e020      	ldi r18, 0
-0000ba bb26      	out PINB, r18
-0000bb e406      	ldi r16, 70
-0000bc d00c      	rcall longdelay
+000038 e128      	ldi r18, 1 << WGM01 | 1 << COM00
+000039 bf23      	out TCCR0, r18
+00003a e020      	ldi r18, 0
+00003b bb26      	out PINB, r18
+00003c e406      	ldi r16, 70
+00003d d00c      	rcall longdelay
          	
-0000bd 912f      	pop r18
-0000be bf2f      	out SREG, r18
-0000bf 912f      	pop r18
-0000c0 9508      ret
+00003e 912f      	pop r18
+00003f bf2f      	out SREG, r18
+000040 912f      	pop r18
+000041 9508      ret
          
          ; 0.0088ms = 8.8us
           delay:
-0000c1 932f      	PUSH R18
+000042 932f      	PUSH R18
           	bigdelay:
-0000c2 e124      		LDI R18, 20
+000043 e124      		LDI R18, 20
           		smalldelay:
-0000c3 952a      			DEC R18
-0000c4 f7f1      			BRNE smalldelay
-0000c5 950a      		DEC R16
-0000c6 f7d9      		BRNE bigdelay
-0000c7 912f      	POP R18
-0000c8 9508      ret
+000044 952a      			DEC R18
+000045 f7f1      			BRNE smalldelay
+000046 950a      		DEC R16
+000047 f7d9      		BRNE bigdelay
+000048 912f      	POP R18
+000049 9508      ret
          ; 1ms = 1000us
           longdelay:
-0000c9 931f      	PUSH R17
-0000ca 932f      	PUSH R18
+00004a 931f      	PUSH R17
+00004b 932f      	PUSH R18
           	loop_16:
-0000cb 2711      		CLR R17
+00004c 2711      		CLR R17
           		loop_17:
-0000cc 2722      			CLR R18
+00004d 2722      			CLR R18
           			loop_18:
-0000cd 9523      				INC R18
-0000ce ff27      				SBRS R18, 7
-0000cf cffd      				rjmp loop_18
-0000d0 9513      			INC R17
-0000d1 ff14      			SBRS R17, 4
-0000d2 cff9      			rjmp loop_17
-0000d3 950a      		DEC R16
-0000d4 f7b1      		BRNE loop_16
-0000d5 912f      	POP R18
-0000d6 911f      	POP R17
-0000d7 9508      ret
+00004e 9523      				INC R18
+00004f ff27      				SBRS R18, 7
+000050 cffd      				rjmp loop_18
+000051 9513      			INC R17
+000052 ff14      			SBRS R17, 4
+000053 cff9      			rjmp loop_17
+000054 950a      		DEC R16
+000055 f7b1      		BRNE loop_16
+000056 912f      	POP R18
+000057 911f      	POP R17
+000058 9508      ret
          
          ;50ms = 50 000us
          ; r16 - ilosc obrotow
           longlongdelay:
-0000d8 931f      	push r17
-0000d9 b71f      	in r17, SREG
-0000da 931f      	push r17
+000059 931f      	push r17
+00005a b71f      	in r17, SREG
+00005b 931f      	push r17
          	
-0000db 2f10      	mov r17, r16
+00005c 2f10      	mov r17, r16
           	loop_64352:
-0000dc e302      		ldi r16, 50
-0000dd dfeb      		rcall longdelay
-0000de 951a      		dec r17
-0000df f7e1      		brne loop_64352
-0000e0 0000      	nop
+00005d e302      		ldi r16, 50
+00005e dfeb      		rcall longdelay
+00005f 951a      		dec r17
+000060 f7e1      		brne loop_64352
+000061 0000      	nop
          	
-0000e1 911f      	pop r17
-0000e2 bf1f      	out SREG, r17
-0000e3 911f      	pop r17
-0000e4 9508      ret
+000062 911f      	pop r17
+000063 bf1f      	out SREG, r17
+000064 911f      	pop r17
+000065 9508      ret
          
+         
+         
+         ; Kolendy:
+         	; Cicha noc
+          cichanoc:
+000066 930f      	push r16
+000067 931f      	push r17
+000068 932f      	push r18
+000069 b70f      	in r16, SREG
+00006a 930f      	push r16
+         	
+00006b e40f      	ldi r16, SOUND_g1
+00006c e01c      	ldi r17, EIGHTH_NOTE + SIXTH_NOTE
+00006d dfc2      	rcall play_sound		
+00006e e407      	ldi r16, SOUND_a1
+00006f e014      	ldi r17, SIXTH_NOTE
+000070 dfbf      	rcall play_sound	
+000071 e40f      	ldi r16, SOUND_g1
+000072 e018      	ldi r17, EIGHTH_NOTE
+000073 dfbc      	rcall play_sound	
+000074 e50e      	ldi r16, SOUND_e1
+000075 e118      	ldi r17, QUARTER_NOTE + EIGHTH_NOTE
+000076 dfb9      	rcall play_sound
+         	
+000077 e40f      	ldi r16, SOUND_g1
+000078 e01c      	ldi r17, EIGHTH_NOTE + SIXTH_NOTE
+000079 dfb6      	rcall play_sound		
+00007a e407      	ldi r16, SOUND_a1
+00007b e014      	ldi r17, SIXTH_NOTE
+00007c dfb3      	rcall play_sound	
+00007d e40f      	ldi r16, SOUND_g1
+00007e e018      	ldi r17, EIGHTH_NOTE
+00007f dfb0      	rcall play_sound	
+000080 e50e      	ldi r16, SOUND_e1
+000081 e118      	ldi r17, QUARTER_NOTE + EIGHTH_NOTE
+000082 dfad      	rcall play_sound
+         
+000083 e305      	ldi r16, SOUND_d2
+000084 e110      	ldi r17, QUARTER_NOTE
+000085 dfaa      	rcall play_sound
+000086 e305      	ldi r16, SOUND_d2
+000087 e018      	ldi r17, EIGHTH_NOTE
+000088 dfa7      	rcall play_sound
+000089 e30f      	ldi r16, SOUND_h1
+00008a e110      	ldi r17, QUARTER_NOTE
+00008b dfa4      	rcall play_sound							
+00008c e30f      	ldi r16, SOUND_h1
+00008d e018      	ldi r17, EIGHTH_NOTE
+00008e dfa1      	rcall play_sound
+         	
+00008f e30b      	ldi r16, SOUND_c2
+000090 e110      	ldi r17, QUARTER_NOTE
+000091 df9e      	rcall play_sound				
+000092 e30b      	ldi r16, SOUND_c2
+000093 e018      	ldi r17, EIGHTH_NOTE
+000094 df9b      	rcall play_sound
+000095 e40f      	ldi r16, SOUND_g1
+000096 e118      	ldi r17, QUARTER_NOTE + EIGHTH_NOTE
+000097 df98      	rcall play_sound		
+         	
+000098 e022      	ldi r18, 2
+          	loop_26576:
+000099 e407      		ldi r16, SOUND_a1
+00009a e110      		ldi r17, QUARTER_NOTE
+00009b df94      		rcall play_sound
+00009c e407      		ldi r16, SOUND_a1
+00009d e018      		ldi r17, EIGHTH_NOTE
+00009e df91      		rcall play_sound
+00009f e30b      		ldi r16, SOUND_c2
+0000a0 e01c      		ldi r17, EIGHTH_NOTE + SIXTH_NOTE
+0000a1 df8e      		rcall play_sound
+0000a2 e30f      		ldi r16, SOUND_h1
+0000a3 e014      		ldi r17, SIXTH_NOTE
+0000a4 df8b      		rcall play_sound
+0000a5 e407      		ldi r16, SOUND_a1
+0000a6 e018      		ldi r17, EIGHTH_NOTE
+0000a7 df88      		rcall play_sound
+         		
+0000a8 e40f      		ldi r16, SOUND_g1
+0000a9 e01c      		ldi r17, EIGHTH_NOTE + SIXTH_NOTE
+0000aa df85      		rcall play_sound				
+0000ab e407      		ldi r16, SOUND_a1
+0000ac e014      		ldi r17, SIXTH_NOTE
+0000ad df82      		rcall play_sound
+0000ae e40f      		ldi r16, SOUND_g1
+0000af e018      		ldi r17, EIGHTH_NOTE
+0000b0 df7f      		rcall play_sound
+0000b1 e50e      		ldi r16, SOUND_e1
+0000b2 e110      		ldi r17, QUARTER_NOTE
+0000b3 df7c      		rcall play_sound
+0000b4 e40f      		ldi r16, SOUND_g1
+0000b5 e018      		ldi r17, EIGHTH_NOTE
+0000b6 df79      		rcall play_sound
+         		
+0000b7 952a      		dec r18
+0000b8 f701      		brne loop_26576
+0000b9 0000      	nop
+         	
+0000ba e305      	ldi r16, SOUND_d2
+0000bb e110      	ldi r17, QUARTER_NOTE
+0000bc df73      	rcall play_sound
+0000bd e305      	ldi r16, SOUND_d2
+0000be e018      	ldi r17, EIGHTH_NOTE
+0000bf df70      	rcall play_sound
+0000c0 e20c      	ldi r16, SOUND_f2
+0000c1 e01c      	ldi r17, EIGHTH_NOTE + SIXTH_NOTE
+0000c2 df6d      	rcall play_sound
+0000c3 e305      	ldi r16, SOUND_d2
+0000c4 e014      	ldi r17, SIXTH_NOTE
+0000c5 df6a      	rcall play_sound
+0000c6 e30f      	ldi r16, SOUND_h1
+0000c7 e018      	ldi r17, EIGHTH_NOTE
+0000c8 df67      	rcall play_sound
+         	
+0000c9 e30b      	ldi r16, SOUND_c2
+0000ca e118      	ldi r17, EIGHTH_NOTE + QUARTER_NOTE
+0000cb df64      	rcall play_sound
+0000cc e30b      	ldi r16, SOUND_c2
+0000cd e018      	ldi r17, EIGHTH_NOTE
+0000ce df61      	rcall play_sound
+0000cf e100      	ldi r16, QUARTER_NOTE
+0000d0 df88      	rcall longlongdelay
+         	
+0000d1 e30b      	ldi r16, SOUND_c2
+0000d2 e01c      	ldi r17, EIGHTH_NOTE + SIXTH_NOTE
+0000d3 df5c      	rcall play_sound
+0000d4 e40f      	ldi r16, SOUND_g1
+0000d5 e014      	ldi r17, SIXTH_NOTE
+0000d6 df59      	rcall play_sound
+0000d7 e50e      	ldi r16, SOUND_e1
+0000d8 e018      	ldi r17, EIGHTH_NOTE
+0000d9 df56      	rcall play_sound
+0000da e40f      	ldi r16, SOUND_g1
+0000db e01c      	ldi r17, EIGHTH_NOTE + SIXTH_NOTE
+0000dc df53      	rcall play_sound
+0000dd e509      	ldi r16, SOUND_f1
+0000de e014      	ldi r17, SIXTH_NOTE
+0000df df50      	rcall play_sound
+0000e0 e60a      	ldi r16, SOUND_d1
+0000e1 e018      	ldi r17, EIGHTH_NOTE
+0000e2 df4d      	rcall play_sound
+         	
+0000e3 e707      	ldi r16, SOUND_c1
+0000e4 e118      	ldi r17, EIGHTH_NOTE + QUARTER_NOTE
+0000e5 df4a      	rcall play_sound
+0000e6 e707      	ldi r16, SOUND_c1
+0000e7 e018      	ldi r17, EIGHTH_NOTE
+0000e8 df47      	rcall play_sound
+0000e9 e100      	ldi r16, QUARTER_NOTE
+0000ea df6e      	rcall longlongdelay
+         	
+0000eb 910f      	pop r16
+0000ec bf0f      	out SREG, r16
+0000ed 912f      	pop r18
+0000ee 911f      	pop r17
+0000ef 910f      	pop r16
+0000f0 9508      ret
          
          
 

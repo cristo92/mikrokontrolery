@@ -1,0 +1,17 @@
+Creating   'pozytyw.eep'
+Creating   'pozytyw.hex'
+Creating   'pozytyw.obj'
+Creating   'pozytyw.lis'
+Creating   'pozytyw.map'
+
+Assembling 'pozytyw.asm'
+Including  'C:\PROGRA~3\Mikro\VMLAB\include\m16def.inc'
+
+Program memory usage:
+Code             :  241 words
+Constants (dw/db):    0 words
+Unused           :    0 words
+Total            :  241 words
+
+Assembly complete with no errors.
+Deleting   'pozytyw.eep'

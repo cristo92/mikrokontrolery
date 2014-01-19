@@ -1,5 +1,5 @@
 
-AVRASM ver. 1.74  speaker2.asm Tue Dec 17 18:23:01 2013
+AVRASM ver. 1.74  pozytyw.asm Sun Jan 19 23:11:44 2014
 
 
 EQU  sreg         0000003f
@@ -406,16 +406,17 @@ EQU  sound_e2     0000002f
 EQU  sound_f2     0000002c
 CSEG reset        00000000
 CSEG start        00000011
-CSEG loop_26576   0000004c
-CSEG forever      0000009e
-CSEG trigger_speaker 000000a3
-CSEG play_sound   000000af
-CSEG delay        000000c1
-CSEG bigdelay     000000c2
-CSEG smalldelay   000000c3
-CSEG longdelay    000000c9
-CSEG loop_16      000000cb
-CSEG loop_17      000000cc
-CSEG loop_18      000000cd
-CSEG longlongdelay 000000d8
-CSEG loop_64352   000000dc
+CSEG forever      0000001f
+CSEG trigger_speaker 00000024
+CSEG play_sound   00000030
+CSEG delay        00000042
+CSEG bigdelay     00000043
+CSEG smalldelay   00000044
+CSEG longdelay    0000004a
+CSEG loop_16      0000004c
+CSEG loop_17      0000004d
+CSEG loop_18      0000004e
+CSEG longlongdelay 00000059
+CSEG loop_64352   0000005d
+CSEG cichanoc     00000066
+CSEG loop_26576   00000099

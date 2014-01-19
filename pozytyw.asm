@@ -2,10 +2,11 @@
 ; BASIC .ASM template file for AVR
 ; ******************************************************
 
-.include "C:\PROGRA~2\VMLAB\include\m16def.inc"
+;.include "C:\Program~2\VMLAB\include\m16def.inc"
+.include "C:\PROGRA~3\Mikro\VMLAB\include\m16def.inc"
 
 ; Wizja:
-; Ka¿dy utwór jest whardcodowany jako funkcja 
+; Ka¿dy utwór jest whardcodowany jako funkcja
 ; Jest jakies GUI na LCD, które wyswietla nr utworu i jego nazwe
 ; SW7 - poprzedni utwór
 ; SW6 - nastêpny utwór
@@ -118,7 +119,120 @@ start:
 	ldi r16, 1 << OCIE0
 	out TIMSK, r16
 	
+	rcall cichanoc
+
+forever:
+   nop
+   nop       ; Infinite loop.
+   nop       ; Define your main system
+   nop       ; behaviour here
+rjmp forever
+
+trigger_speaker:
+	push r16
+	in r16, SREG
+	push r16
+	
+	in r16, PINB
+	sbrc r16, PB3
+	cbi SPEAKER_PORT, SPEAKER_P
+	sbrs r16, PB3
+	sbi SPEAKER_PORT, SPEAKER_P
+	
+	pop r16
+	out SREG, r16
+	pop r16
+reti
+
+; r16 - czêstotliwoœæ	r17 - d³ugoœæ nutki
+play_sound:
+	push r18
+	in r18, SREG
+	push r18
+	
+	out OCR0, r16
+	ldi r18, 1 << WGM01 | 1 << CS02 | 1 << COM00
+	out TCCR0, r18
+	
+	mov r16, r17
+	rcall longlongdelay
+	
+	ldi r18, 1 << WGM01 | 1 << COM00
+	out TCCR0, r18
+	ldi r18, 0
+	out PINB, r18
+	ldi r16, 70
+	rcall longdelay
+	
+	pop r18
+	out SREG, r18
+	pop r18
+ret
+
+; 0.0088ms = 8.8us
+delay:
+	PUSH R18
+	bigdelay:
+		LDI R18, 20
+		smalldelay:
+			DEC R18
+			BRNE smalldelay
+		DEC R16
+		BRNE bigdelay
+	POP R18
+ret
+; 1ms = 1000us
+longdelay:
+	PUSH R17
+	PUSH R18
+	loop_16:
+		CLR R17
+		loop_17:
+			CLR R18
+			loop_18:
+				INC R18
+				SBRS R18, 7
+				rjmp loop_18
+			INC R17
+			SBRS R17, 4
+			rjmp loop_17
+		DEC R16
+		BRNE loop_16
+	POP R18
+	POP R17
+ret
+
+;50ms = 50 000us
+; r16 - ilosc obrotow
+longlongdelay:
+	push r17
+	in r17, SREG
+	push r17
+	
+	mov r17, r16
+	loop_64352:
+		ldi r16, 50
+		rcall longdelay
+		dec r17
+		brne loop_64352
+	nop
+	
+	pop r17
+	out SREG, r17
+	pop r17
+ret
+
+
+
+; Kolendy:
 	; Cicha noc
+cichanoc:
+	push r16
+	push r17
+	push r18
+	in r16, SREG
+	push r16
+	
 	ldi r16, SOUND_g1
 	ldi r17, EIGHTH_NOTE + SIXTH_NOTE
 	rcall play_sound		
@@ -258,107 +372,12 @@ start:
 	rcall play_sound
 	ldi r16, QUARTER_NOTE
 	rcall longlongdelay
-
-forever:
-   nop
-   nop       ; Infinite loop.
-   nop       ; Define your main system
-   nop       ; behaviour here
-rjmp forever
-
-trigger_speaker:
-	push r16
-	in r16, SREG
-	push r16
-	
-	in r16, PINB
-	sbrc r16, PB3
-	cbi SPEAKER_PORT, SPEAKER_P
-	sbrs r16, PB3
-	sbi SPEAKER_PORT, SPEAKER_P
 	
 	pop r16
 	out SREG, r16
+	pop r18
+	pop r17
 	pop r16
-reti
-
-; r16 - czêstotliwoœæ	r17 - d³ugoœæ nutki
-play_sound:
-	push r18
-	in r18, SREG
-	push r18
-	
-	out OCR0, r16
-	ldi r18, 1 << WGM01 | 1 << CS02 | 1 << COM00
-	out TCCR0, r18
-	
-	mov r16, r17
-	rcall longlongdelay
-	
-	ldi r18, 1 << WGM01 | 1 << COM00
-	out TCCR0, r18
-	ldi r18, 0
-	out PINB, r18
-	ldi r16, 70
-	rcall longdelay
-	
-	pop r18
-	out SREG, r18
-	pop r18
 ret
-
-; 0.0088ms = 8.8us
-delay:
-	PUSH R18
-	bigdelay:
-		LDI R18, 20
-		smalldelay:
-			DEC R18
-			BRNE smalldelay
-		DEC R16
-		BRNE bigdelay
-	POP R18
-ret
-; 1ms = 1000us
-longdelay:
-	PUSH R17
-	PUSH R18
-	loop_16:
-		CLR R17
-		loop_17:
-			CLR R18
-			loop_18:
-				INC R18
-				SBRS R18, 7
-				rjmp loop_18
-			INC R17
-			SBRS R17, 4
-			rjmp loop_17
-		DEC R16
-		BRNE loop_16
-	POP R18
-	POP R17
-ret
-
-;50ms = 50 000us
-; r16 - ilosc obrotow
-longlongdelay:
-	push r17
-	in r17, SREG
-	push r17
-	
-	mov r17, r16
-	loop_64352:
-		ldi r16, 50
-		rcall longdelay
-		dec r17
-		brne loop_64352
-	nop
-	
-	pop r17
-	out SREG, r17
-	pop r17
-ret
-
 
 

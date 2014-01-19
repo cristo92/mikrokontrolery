@@ -6,8 +6,8 @@
 ; Micro + software running
 ; ------------------------------------------------------------
 .MICRO "ATmega16"
-.PROGRAM "speaker2.asm"
-.TARGET "speaker2.hex"
+.PROGRAM "pozytyw.asm"
+.TARGET "pozytyw.hex"
 
 .TRACE              ; Activate micro trace
 
