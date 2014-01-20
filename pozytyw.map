@@ -1,5 +1,5 @@
 
-AVRASM ver. 1.74  pozytyw.asm Sun Jan 19 23:11:44 2014
+AVRASM ver. 1.74  pozytyw.asm Mon Jan 20 13:27:12 2014
 
 
 EQU  sreg         0000003f
@@ -404,19 +404,29 @@ EQU  sound_c2     0000003b
 EQU  sound_d2     00000035
 EQU  sound_e2     0000002f
 EQU  sound_f2     0000002c
+EQU  lcd_data_port 00000012
+EQU  lcd_data_ddr 00000011
+EQU  lcd_rs       00000000
+EQU  lcd_oe       00000001
+EQU  lcd_d4       00000002
+EQU  lcd_d5       00000003
+EQU  lcd_d6       00000004
+EQU  lcd_d7       00000005
 CSEG reset        00000000
 CSEG start        00000011
-CSEG forever      0000001f
-CSEG trigger_speaker 00000024
-CSEG play_sound   00000030
-CSEG delay        00000042
-CSEG bigdelay     00000043
-CSEG smalldelay   00000044
-CSEG longdelay    0000004a
-CSEG loop_16      0000004c
-CSEG loop_17      0000004d
-CSEG loop_18      0000004e
-CSEG longlongdelay 00000059
-CSEG loop_64352   0000005d
-CSEG cichanoc     00000066
-CSEG loop_26576   00000099
+CSEG forever      0000002e
+CSEG trigger_speaker 00000033
+CSEG play_sound   0000003f
+CSEG delay        00000051
+CSEG bigdelay     00000052
+CSEG smalldelay   00000053
+CSEG longdelay    00000059
+CSEG loop_16      0000005b
+CSEG loop_17      0000005c
+CSEG loop_18      0000005d
+CSEG longlongdelay 00000068
+CSEG loop_64352   0000006c
+CSEG lcd_configure 00000075
+CSEG copy         000000a7
+CSEG cichanoc     000000d7
+CSEG loop_26576   0000010a

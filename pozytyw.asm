@@ -2,8 +2,8 @@
 ; BASIC .ASM template file for AVR
 ; ******************************************************
 
-;.include "C:\Program~2\VMLAB\include\m16def.inc"
-.include "C:\PROGRA~3\Mikro\VMLAB\include\m16def.inc"
+.include "C:\PROGRA~2\VMLAB\include\m16def.inc"
+;.include "C:\PROGRA~3\Mikro\VMLAB\include\m16def.inc"
 
 ; Wizja:
 ; Ka¿dy utwór jest whardcodowany jako funkcja
@@ -64,6 +64,16 @@
 	.equ  SOUND_e2  = 47
 	.equ  SOUND_f2  = 44
 
+; LCD variables
+	.equ  LCD_DATA_PORT = PORTD
+	.equ  LCD_DATA_DDR  = DDRD
+	.equ  LCD_RS        = PD0
+	.equ  LCD_OE        = PD1
+	.equ  LCD_D4        = PD2
+	.equ  LCD_D5        = PD3
+	.equ  LCD_D6        = PD4
+	.equ  LCD_D7        = PD5
+	
 ; Define here Reset and interrupt vectors, if any
 ;
 reset:
@@ -119,6 +129,22 @@ start:
 	ldi r16, 1 << OCIE0
 	out TIMSK, r16
 	
+	rcall lcd_configure
+	ldi r16, '>'
+	rcall copy
+	ldi r16, ' '
+	rcall copy
+	ldi r16, 'C'
+	rcall copy
+	ldi r16, 'i'
+	rcall copy
+	ldi r16, 'c'
+	rcall copy
+	ldi r16, 'h'
+	rcall copy
+	ldi r16, 'a'
+	rcall copy
+	
 	rcall cichanoc
 
 forever:
@@ -170,6 +196,7 @@ play_sound:
 ret
 
 ; 0.0088ms = 8.8us
+; R16 - liczba obrotów
 delay:
 	PUSH R18
 	bigdelay:
@@ -182,6 +209,7 @@ delay:
 	POP R18
 ret
 ; 1ms = 1000us
+; R16 - liczba obrotów
 longdelay:
 	PUSH R17
 	PUSH R18
@@ -203,7 +231,7 @@ longdelay:
 ret
 
 ;50ms = 50 000us
-; r16 - ilosc obrotow
+; r16 - liczba obrotow
 longlongdelay:
 	push r17
 	in r17, SREG
@@ -222,7 +250,125 @@ longlongdelay:
 	pop r17
 ret
 
+; LCD_configure
+lcd_configure:
+	; Set as output
+	SBI LCD_DATA_DDR, LCD_RS
+	SBI LCD_DATA_DDR, LCD_OE
+	SBI LCD_DATA_DDR, LCD_D4
+	SBI LCD_DATA_DDR, LCD_D5
+	SBI LCD_DATA_DDR, LCD_D6
+	SBI LCD_DATA_DDR, LCD_D7
 
+	CBI LCD_DATA_PORT, LCD_RS
+   CBI LCD_DATA_PORT, LCD_OE
+   LDI R16, 40
+   RCALL longdelay
+   ; First instruction (30)16
+   SBI LCD_DATA_PORT, LCD_OE
+   SBI LCD_DATA_PORT, LCD_D4
+   SBI LCD_DATA_PORT, LCD_D5
+   CBI LCD_DATA_PORT, LCD_D6
+   CBI LCD_DATA_PORT, LCD_D7
+   NOP
+   LDI R16, 6
+   CBI LCD_DATA_PORT, LCD_OE
+   RCALL longdelay
+   ; Second instruction (30)16
+   SBI LCD_DATA_PORT, LCD_OE
+   NOP
+   LDI R16, 10
+   CBI LCD_DATA_PORT, LCD_OE
+   RCALL delay
+   ; Third instruction (30)16
+   SBI LCD_DATA_PORT, LCD_OE
+   NOP
+   LDI R16, 10
+   CBI LCD_DATA_PORT, LCD_OE
+   RCALL delay
+   ; Fourth instruction (20)16
+   SBI LCD_DATA_PORT, LCD_OE
+   CBI LCD_DATA_PORT, LCD_D4
+   NOP
+   LDI R16, 6
+   CBI LCD_DATA_PORT, LCD_OE
+   RCALL delay
+
+	; My configuration
+	; Function set
+	LDI R16, 0b00101011
+	RCALL copy
+	LDI R16, 6
+	RCALL delay
+	; Clear display
+	LDI R16, 0b00000001
+	RCALL copy
+	LDI R16, 2
+	RCALL longdelay
+	; Display control
+	LDI R16, 0b00001111
+	RCALL copy
+	LDI R16, 6
+	RCALL delay
+	; Data
+	SBI LCD_DATA_PORT, LCD_RS
+	LDI R16, 10	
+ret
+
+; Copy - wypisuje pod kursorem znak R16, przesuwa kursor w prawo
+; R16 - argument, znak
+copy:
+	PUSH R17
+	MOV R17, R16
+	
+	SBI LCD_DATA_PORT, LCD_OE ; Set E as 1
+	SBRS R17, 4   ; Copy 4 bit
+	CBI LCD_DATA_PORT, LCD_D4
+	SBRC R17, 4
+	SBI LCD_DATA_PORT, LCD_D4
+	SBRS R17, 5   ; Copy 5 bit
+	CBI LCD_DATA_PORT, LCD_D5
+	SBRC R17, 5
+	SBI LCD_DATA_PORT, LCD_D5
+	SBRS R17, 6   ; Copy 6 bit
+	CBI LCD_DATA_PORT, LCD_D6
+	SBRC R17, 6
+	SBI LCD_DATA_PORT, LCD_D6
+	SBRS R17, 7   ; Copy 7 bit
+	CBI LCD_DATA_PORT, LCD_D7
+	SBRC R17, 7
+	SBI LCD_DATA_PORT, LCD_D7
+	LDI R16, 1
+	NOP
+	CBI LCD_DATA_PORT, LCD_OE  ; Set E as 0
+	RCALL delay ; Delay 10 us
+	
+	SBI LCD_DATA_PORT, LCD_OE ; Set E as 1
+	SBRS R17, 0   ; Copy 0 bit
+	CBI LCD_DATA_PORT, LCD_D4
+	SBRC R17, 0
+	SBI LCD_DATA_PORT, LCD_D4
+	SBRS R17, 1   ; Copy 1 bit
+	CBI LCD_DATA_PORT, LCD_D5
+	SBRC R17, 1
+	SBI LCD_DATA_PORT, LCD_D5
+	SBRS R17, 2   ; Copy 2 bit
+	CBI LCD_DATA_PORT, LCD_D6
+	SBRC R17, 2
+	SBI LCD_DATA_PORT, LCD_D6
+	SBRS R17, 3   ; Copy 3 bit
+	CBI LCD_DATA_PORT, LCD_D7
+	SBRC R17, 3
+	SBI LCD_DATA_PORT, LCD_D7
+	LDI R16, 1
+	NOP
+	CBI LCD_DATA_PORT, LCD_OE ; Set E as 0
+	RCALL delay ; Delay 10 us
+	LDI R16, 10
+	RCALL delay
+	
+	POP R17
+ret
 
 ; Kolendy:
 	; Cicha noc
@@ -379,5 +525,6 @@ cichanoc:
 	pop r17
 	pop r16
 ret
+
 
 

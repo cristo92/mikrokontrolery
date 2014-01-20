@@ -22,9 +22,10 @@
 ; Define here the hardware around the micro
 ; ------------------------------------------------------------
 
-
+XLCD LCD(16 2 250k) pd0 gnd pd1 pd5 pd4 pd3 pd2 gnd gnd gnd gnd
 
 ; D5 VDD PB4  ; x: Panel LEDs 1 - 8
 .plot  V(PB4)
 .plot V(PB3)
+
 
