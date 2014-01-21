@@ -2,8 +2,8 @@
 ; BASIC .ASM template file for AVR
 ; ******************************************************
 
-;.include "C:\PROGRA~2\VMLAB\include\m16def.inc"
-.include "C:\PROGRA~3\Mikro\VMLAB\include\m16def.inc"
+.include "C:\PROGRA~2\VMLAB\include\m16def.inc"
+;.include "C:\PROGRA~3\Mikro\VMLAB\include\m16def.inc"
 	
 ; Wizja:
 ; Ka¿dy utwór jest whardcodowany jako funkcja
@@ -1588,6 +1588,7 @@ cichanoc:
 	pop r17
 	pop r16
 ret
+
 
 
 

@@ -1,5 +1,5 @@
 
-AVRASM ver. 1.74  pozytyw.asm Tue Jan 21 15:06:46 2014
+AVRASM ver. 1.74  pozytyw.asm Tue Jan 21 15:57:31 2014
 
 
 EQU  sreg         0000003f
@@ -427,36 +427,36 @@ CSEG longdelay    00000078
 CSEG loop_16      0000007c
 CSEG loop_17      0000007d
 CSEG loop_18      0000007e
-CSEG superlong    0000008d
-CSEG loop_643     00000091
-CSEG move_lcd     0000009a
-CSEG if_move_lcd01 000000b2
-CSEG if_move_lcd02 000000b4
-CSEG if_move_lcd03 000000b6
-CSEG if_move_lcd00 000000b8
-CSEG if_move_lcd11 000000c0
-CSEG if_move_lcd12 000000c2
-CSEG if_move_lcd13 000000c4
-CSEG if_move_lcd10 000000c6
-CSEG while_move_lcd 000000c6
-CSEG if_move_lcd  000000cc
-CSEG forever_move_lcd 000000cd
-CSEG play_song    000000d4
-CSEG while_play_song 000000df
-CSEG if_play_song 000000e5
-CSEG forever_play_song 000000e6
-CSEG if_play_song1 000000ed
-CSEG if_play_song2 000000ef
-CSEG if_play_song3 000000f1
-CSEG interrupt_configure 000000f8
-CSEG lcd_configure 0000010c
-CSEG copy         00000144
-CSEG new_line     00000178
-CSEG clear_lcd    0000018b
-CSEG write_mariotheme 0000019c
-CSEG write_starwars 000001b9
-CSEG write_cichanoc 000001d2
-CSEG mariotheme   000001eb
-CSEG starwars     000003a8
-CSEG cichanoc     00000481
-CSEG loop_26576   000004b4
+CSEG superlong    0000008b
+CSEG loop_643     0000008f
+CSEG move_lcd     00000098
+CSEG if_move_lcd01 000000b0
+CSEG if_move_lcd02 000000b2
+CSEG if_move_lcd03 000000b4
+CSEG if_move_lcd00 000000b6
+CSEG if_move_lcd11 000000be
+CSEG if_move_lcd12 000000c0
+CSEG if_move_lcd13 000000c2
+CSEG if_move_lcd10 000000c4
+CSEG while_move_lcd 000000c4
+CSEG if_move_lcd  000000ca
+CSEG forever_move_lcd 000000cb
+CSEG play_song    000000d2
+CSEG while_play_song 000000dd
+CSEG if_play_song 000000e3
+CSEG forever_play_song 000000e4
+CSEG if_play_song1 000000eb
+CSEG if_play_song2 000000ed
+CSEG if_play_song3 000000ef
+CSEG interrupt_configure 000000f6
+CSEG lcd_configure 0000010a
+CSEG copy         00000142
+CSEG new_line     00000176
+CSEG clear_lcd    00000189
+CSEG write_mariotheme 0000019a
+CSEG write_starwars 000001b7
+CSEG write_cichanoc 000001d0
+CSEG mariotheme   000001e9
+CSEG starwars     000003a6
+CSEG cichanoc     0000047f
+CSEG loop_26576   000004b2
