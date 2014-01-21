@@ -1,5 +1,5 @@
 
-AVRASM ver. 1.74  pozytyw.asm Mon Jan 20 13:27:12 2014
+AVRASM ver. 1.74  pozytyw.asm Tue Jan 21 15:06:46 2014
 
 
 EQU  sreg         0000003f
@@ -387,6 +387,7 @@ DEF  temp         r16
 EQU  speaker_ddr  00000017
 EQU  speaker_p    00000003
 EQU  speaker_port 00000018
+EQU  speaker_pin  00000016
 EQU  whole_note   00000040
 EQU  half_note    00000020
 EQU  quarter_half_note 00000018
@@ -404,8 +405,11 @@ EQU  sound_c2     0000003b
 EQU  sound_d2     00000035
 EQU  sound_e2     0000002f
 EQU  sound_f2     0000002c
-EQU  lcd_data_port 00000012
-EQU  lcd_data_ddr 00000011
+EQU  sound_g2     00000027
+EQU  sound_a2     00000023
+EQU  sound_h2     0000001f
+EQU  lcd_data_port 00000015
+EQU  lcd_data_ddr 00000014
 EQU  lcd_rs       00000000
 EQU  lcd_oe       00000001
 EQU  lcd_d4       00000002
@@ -413,20 +417,46 @@ EQU  lcd_d5       00000003
 EQU  lcd_d6       00000004
 EQU  lcd_d7       00000005
 CSEG reset        00000000
-CSEG start        00000011
-CSEG forever      0000002e
-CSEG trigger_speaker 00000033
-CSEG play_sound   0000003f
-CSEG delay        00000051
-CSEG bigdelay     00000052
-CSEG smalldelay   00000053
-CSEG longdelay    00000059
-CSEG loop_16      0000005b
-CSEG loop_17      0000005c
-CSEG loop_18      0000005d
-CSEG longlongdelay 00000068
-CSEG loop_64352   0000006c
-CSEG lcd_configure 00000075
-CSEG copy         000000a7
-CSEG cichanoc     000000d7
-CSEG loop_26576   0000010a
+CSEG start        0000002a
+CSEG forever      00000059
+CSEG play_sound   0000005e
+CSEG delay        00000070
+CSEG bigdelay     00000071
+CSEG smalldelay   00000072
+CSEG longdelay    00000078
+CSEG loop_16      0000007c
+CSEG loop_17      0000007d
+CSEG loop_18      0000007e
+CSEG superlong    0000008d
+CSEG loop_643     00000091
+CSEG move_lcd     0000009a
+CSEG if_move_lcd01 000000b2
+CSEG if_move_lcd02 000000b4
+CSEG if_move_lcd03 000000b6
+CSEG if_move_lcd00 000000b8
+CSEG if_move_lcd11 000000c0
+CSEG if_move_lcd12 000000c2
+CSEG if_move_lcd13 000000c4
+CSEG if_move_lcd10 000000c6
+CSEG while_move_lcd 000000c6
+CSEG if_move_lcd  000000cc
+CSEG forever_move_lcd 000000cd
+CSEG play_song    000000d4
+CSEG while_play_song 000000df
+CSEG if_play_song 000000e5
+CSEG forever_play_song 000000e6
+CSEG if_play_song1 000000ed
+CSEG if_play_song2 000000ef
+CSEG if_play_song3 000000f1
+CSEG interrupt_configure 000000f8
+CSEG lcd_configure 0000010c
+CSEG copy         00000144
+CSEG new_line     00000178
+CSEG clear_lcd    0000018b
+CSEG write_mariotheme 0000019c
+CSEG write_starwars 000001b9
+CSEG write_cichanoc 000001d2
+CSEG mariotheme   000001eb
+CSEG starwars     000003a8
+CSEG cichanoc     00000481
+CSEG loop_26576   000004b4

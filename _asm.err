@@ -5,13 +5,13 @@ Creating   'pozytyw.lis'
 Creating   'pozytyw.map'
 
 Assembling 'pozytyw.asm'
-Including  'C:\PROGRA~2\VMLAB\include\m16def.inc'
+Including  'C:\PROGRA~3\Mikro\VMLAB\include\m16def.inc'
 
 Program memory usage:
-Code             :  354 words
+Code             : 1267 words
 Constants (dw/db):    0 words
-Unused           :    0 words
-Total            :  354 words
+Unused           :   25 words
+Total            : 1292 words
 
 Assembly complete with no errors.
 Deleting   'pozytyw.eep'
