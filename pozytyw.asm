@@ -3,36 +3,18 @@
 ; ******************************************************
 
 .include "C:\PROGRA~2\VMLAB\include\m16def.inc"
-;.include "C:\PROGRA~3\Mikro\VMLAB\include\m16def.inc"
 	
-; Wizja:
-; Ka¿dy utwór jest whardcodowany jako funkcja
-; Jest jakies GUI na LCD, które wyswietla nr utworu i jego nazwe
-; SW7 - poprzedni utwór
-; SW6 - nastêpny utwór
-; SW5 - graj/przestañ
-
-; Najprostrze rozwi¹zanie - dowolny przycisk wywo³uje przerwanie, ktore przerywa utwor i obsluguje przycisk
-; Drugie rozwiazanie - Gdy grany jest utwor wylaczane jest przerwanie SW7 i SW6
-; Trzecie rozwiazanie - obslugiwanie przerwania SW7 i SW6 nie przerywa utworu, a wykonuje sie w czasie przerwy pomiedzy nutami
-
-; LCD:
-; Pierwsze rozwiazanie - dwa wiersze ekranu sa zarezerwowane dla jedengo utworu
-; Drugie rozwiazanie - Wyswietlamy aktywny utwor w pierwszej lini, a w drugiej nastepny
-
-; Define here the variables
-;
 .def  temp  =r16
 .equ SPEAKER_DDR = DDRB
 .equ SPEAKER_P = PB3
 .equ SPEAKER_PORT = PORTB
 .equ SPEAKER_PIN = PINB
 
-	;   D³ugoœæ nuty 		1,6 s		1600 taktów longdelay
-	;   D³ugoœæ pó³nuty 	0,8 s 	800  taktow longdelay
-	;	 D³ugoœæ æwierænuty 0,4 s	400  taktow longdelay
-	;	 D³ugoœæ ósemki	0,2 s		200  taktow longdelay
-	;   D³ugoœæ szesnastki 0,1 s  2    takty superlong
+	;   D³ugoœæ nuty 		1,6 s		6400 taktów longdelay
+	;   D³ugoœæ pó³nuty 	0,8 s 	3200  taktow longdelay
+	;	 D³ugoœæ æwierænuty 0,4 s	1600  taktow longdelay
+	;	 D³ugoœæ ósemki	0,2 s		800  taktow longdelay
+	;   D³ugoœæ szesnastki 0,1 s  4    takty superlong
 	.equ  WHOLE_NOTE	= 64
 	.equ  HALF_NOTE	= 32
 	.equ  QUARTER_HALF_NOTE = 24
@@ -83,8 +65,7 @@
 	
 .cseg
 .org 0
-; Define here Reset and interrupt vectors, if any
-;
+
 reset:
    rjmp start 	
 .org INT0addr
@@ -92,30 +73,12 @@ reset:
 	
 .org INT1addr
 	rjmp play_song
-   reti      ; Addr $03
-   reti      ; Addr $04
-   reti      ; Addr $05
-   reti      ; Addr $06        Use 'rjmp myVector'
-   reti      ; Addr $07        to define a interrupt vector
-   reti      ; Addr $08
-   reti      ; Addr $09
-   reti      ; Addr $0A
-   reti      ; Addr $0B        This is just an example
-   reti      ; Addr $0C        Not all MCUs have the same
-   reti      ; Addr $0D        number of interrupt vectors
-   reti      ; Addr $0E
-   reti      ; Addr $0F
-   reti      ; Addr $10
 
 .org 42
 
 ; Program starts here after Reset
 ;
 start:
-   nop       ; Initialize here ports, stack pointer,
-   nop       ; cleanup RAM, etc.
-   nop       ;
-   nop       ;
 
    ; Initialize the stack
    LDI R20, HIGH (RAMEND)
@@ -130,23 +93,6 @@ start:
 	; Configure speaker
 	sbi SPEAKER_DDR, SPEAKER_P
 	cbi SPEAKER_PORT, SPEAKER_P
-	
-	; Configure counter
-	;ldi r16, 0b00000000
-	;out DDRB, r16
-	;   Preskaler:
-	;   CS02 CS01 CS00
-	;   0    0    0     licznik zatrzymany
-	;   0    0    1     clk
-	;   0    1    0     clk/8
-	;   0    1    1     clk/64
-	;   1    0    0     clk/256
-	;   1    0    1     clk/1024
-	;ldi r16, 1 << WGM01 | 1 << CS02 | 1 << COM00
-	;out TCCR0, r16
-
-	ldi r16, 1 << OCIE0
-	out TIMSK, r16
 	
 	rcall lcd_configure
 	ldi r16, 100
@@ -176,6 +122,32 @@ start:
 	ldi r16, '7'
 	rcall copy
 	
+	rcall new_line
+	
+	rcall delay
+	ldi r16, 'P'
+	rcall copy
+	ldi r16, 'o'
+	rcall copy
+	ldi r16, 'z'
+	rcall copy
+	ldi r16, 'n'
+	rcall copy
+	ldi r16, 'i'
+	rcall copy
+	ldi r16, 'e'
+	rcall copy
+	ldi r16, 'j'
+	rcall copy
+	ldi r16, ' '
+	rcall copy
+	ldi r16, 'S'
+	rcall copy
+	ldi r16, 'W'
+	rcall copy
+	ldi r16, '6'
+	rcall copy
+	
 	rcall interrupt_configure
 	
 	nop
@@ -183,15 +155,9 @@ start:
 	sei
 	nop
 	nop
-	
-	;
-	rcall cichanoc
 
 forever:
    nop
-   nop       ; Infinite loop.
-   nop       ; Define your main system
-   nop       ; behaviour here
 rjmp forever
 
 ; r16 - czêstotliwoœæ	r17 - d³ugoœæ nutki
@@ -200,6 +166,14 @@ play_sound:
 	in r18, SREG
 	push r18
 	
+	;   Preskaler:
+	;   CS02 CS01 CS00
+	;   0    0    0     licznik zatrzymany
+	;   0    0    1     clk
+	;   0    1    0     clk/8
+	;   0    1    1     clk/64
+	;   1    0    0     clk/256
+	;   1    0    1     clk/1024
 	out OCR0, r16
 	ldi r18, 1 << WGM01 | 1 << CS02 | 1 << COM00
 	out TCCR0, r18
@@ -237,8 +211,6 @@ ret
 longdelay:
 	PUSH R17
 	PUSH R18
-	in r17, SREG
-	push r17
 	
 	loop_16:
 		CLR R17
@@ -254,8 +226,6 @@ longdelay:
 		DEC R16
 		brne loop_16
 		
-	pop r17
-	out SREG, r17
 	POP R18
 	POP R17
 ret
@@ -270,7 +240,7 @@ superlong:
 	mov r17, r16
 	loop_643:
 		ldi r16, 50
-		rcall longdelay ; Wykrzacza sie na tej funkcji - DLACZEGO?!?!
+		rcall longdelay
 		dec r17
 		brne loop_643
 	nop
@@ -284,6 +254,11 @@ move_lcd:
 	push r16
 	in r16, SREG
 	push r16
+	
+	ldi r18, 1 << WGM01 | 1 << COM00
+	out TCCR0, r18
+	ldi r18, 0
+	out PORTB, r18
 	
 	inc r25
 	; Check if bigger than 3
@@ -448,20 +423,9 @@ interrupt_configure:
 	sbr r16, 1 << 6
 	out GICR, r16
 	
-	;in r16, MCUCSR
-	;sbr r16, 1 << ISC00 | 1 << ISC10
-	;cbr r16, 1 << ISC01 | 1 << ISC11
-	;out MCUCSR, r16
-	
-	;in r16, GICR
-	;sbr r16, 1 << INT0 | 1 << INT1
-	;out GICR, r16
-	
 	in r16, GIFR
 	sbr r16, 1 << INTF0 | 1 << INTF1
 	out GIFR, r16
-	
-	;sei
 	
 	pop r16
 ret
@@ -1588,6 +1552,8 @@ cichanoc:
 	pop r17
 	pop r16
 ret
+
+
 
 
 

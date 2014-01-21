@@ -10,8 +10,8 @@ Including  'C:\PROGRA~2\VMLAB\include\m16def.inc'
 Program memory usage:
 Code             : 1265 words
 Constants (dw/db):    0 words
-Unused           :   25 words
-Total            : 1290 words
+Unused           :   39 words
+Total            : 1304 words
 
 Assembly complete with no errors.
 Deleting   'pozytyw.eep'
